@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
+    "id": "luna-lang/tests",
+    "type": "lib",
+    "requires": [
+        "karm-test",
+        "luna-lang"
+    ],
+    "injects": [
+        "__tests__"
+    ]
+}

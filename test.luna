@@ -1,0 +1,14 @@
+var None = typeof none;
+var Boolean = typeof true;
+var Integer = typeof 0;
+var Number = typeof 1.0;
+var Object = typeof [];
+
+if ([] is Object)
+    "hello"
+else
+    "bruh";
+
+while true { break; }
+
+typeof { bruh: 1 }
