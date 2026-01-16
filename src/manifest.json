@@ -5,6 +5,6 @@
     "requires": [
         "karm-sys",
         "karm-cli",
-        "luna-lang"
+        "luna.lang"
     ]
 }

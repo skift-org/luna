@@ -1,8 +1,9 @@
 {
     "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.component.v1",
-    "id": "luna-lang",
+    "id": "luna.lang",
     "type": "lib",
     "requires": [
-        "karm-core"
+        "karm-core",
+        "karm-sys"
     ]
 }

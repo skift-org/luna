@@ -29,10 +29,6 @@ export struct Value : Union<None, Boolean, Integer, Number, Symbol, String, Refe
 namespace Symbols {
 
 Symbol THIS = "this"_sym;
-Symbol FROM = "from"_sym;
-Symbol OF = "of"_sym;
-Symbol PARENT = "parent"_sym;
-Symbol RHS = "rhs"_sym;
 
 Symbol LESS = "less"_sym;
 Symbol EQUIVALENT = "equivalent"_sym;
@@ -57,6 +53,8 @@ export struct Completion {
         CONTINUE,
         BREAK,
         EXCEPTION,
+
+        _LEN,
     };
 
     using enum Type;

@@ -24,15 +24,12 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         co_return Ok();
 
     auto code = co_try$(Sys::readAllUtf8(scriptArg.value()));
-    Sys::println("--- code ---\n{}", code);
 
     auto parseRes = Luna::parse(code);
     if (not parseRes) {
         logError("failed to parse {}: {}", scriptArg.value(), parseRes.none().value);
         co_return Error::invalidInput("parser error");
     }
-
-    Sys::println("--- exprs ---\n{}", parseRes.unwrap());
 
     auto evalRes = Luna::opEval(parseRes.take(), Luna::builtins().take());
     if (not evalRes) {
@@ -45,6 +42,5 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         evalRes = Ok(completion.value);
     }
 
-    Sys::println("--- result ---\n{}", evalRes.unwrap());
     co_return Ok();
 }
