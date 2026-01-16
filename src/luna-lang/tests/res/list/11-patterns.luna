@@ -1,0 +1,53 @@
+// List Common Patterns Tests
+
+// Test: Pair/tuple pattern
+var pair = [10, 20];
+var first = pair[0];
+var second = pair[1];
+assert first == 10;
+assert second == 20;
+
+// Test: Triple pattern
+var rgb = [255, 128, 0];
+var r = rgb[0];
+var g = rgb[1];
+var b = rgb[2];
+assert r == 255;
+assert g == 128;
+assert b == 0;
+
+// Test: Stack pattern (manual)
+var stack = [none, none, none];
+var top = 0;
+// push
+stack[top] = 1; top = top + 1;
+stack[top] = 2; top = top + 1;
+stack[top] = 3; top = top + 1;
+// pop
+top = top - 1; var v3 = stack[top];
+top = top - 1; var v2 = stack[top];
+top = top - 1; var v1 = stack[top];
+assert v3 == 3;
+assert v2 == 2;
+assert v1 == 1;
+
+// Test: Lookup table pattern
+var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+assert days[0] == "Sun";
+assert days[3] == "Wed";
+assert days[6] == "Sat";
+
+// Test: Queue simulation (fixed size)
+var queue = [none, none, none];
+var head = 0;
+var tail = 0;
+// enqueue
+queue[tail] = "first"; tail = tail + 1;
+queue[tail] = "second"; tail = tail + 1;
+// dequeue
+var item1 = queue[head]; head = head + 1;
+var item2 = queue[head]; head = head + 1;
+assert item1 == "first";
+assert item2 == "second";
+
+#pass

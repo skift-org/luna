@@ -1,0 +1,49 @@
+// List with Functions Tests
+
+// Test: Store functions in list
+var funcs = [
+    fn(x) { x + 1 },
+    fn(x) { x * 2 },
+    fn(x) { x - 1 }
+];
+assert funcs[0](5) == 6;
+assert funcs[1](5) == 10;
+assert funcs[2](5) == 4;
+
+// Test: Pipeline pattern
+var pipeline = [
+    fn(x) { x + 1 },
+    fn(x) { x * 2 },
+    fn(x) { x + 10 }
+];
+var value = 5;
+value = pipeline[0](value);  // 6
+value = pipeline[1](value);  // 12
+value = pipeline[2](value);  // 22
+assert value == 22;
+
+// Test: Function returning list
+var makePair = fn(a, b) { [a, b] };
+var pair = makePair(10, 20);
+assert pair[0] == 10;
+assert pair[1] == 20;
+
+// Test: List as function parameter
+var sum = fn(list) { list[0] + list[1] + list[2] };
+assert sum([1, 2, 3]) == 6;
+assert sum([10, 20, 30]) == 60;
+
+// Test: Higher-order with list of funcs
+var applyAll = fn(funcs, x) {
+    [funcs[0](x), funcs[1](x), funcs[2](x)]
+};
+var results = applyAll([
+    fn(n) { n + 1 },
+    fn(n) { n * 2 },
+    fn(n) { n * n }
+], 3);
+assert results[0] == 4;
+assert results[1] == 6;
+assert results[2] == 9;
+
+#pass

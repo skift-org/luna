@@ -1,0 +1,45 @@
+// List with Tables Tests
+
+// Test: List of simple tables
+var points = [
+    {x: 0, y: 0},
+    {x: 10, y: 20},
+    {x: 5, y: 15}
+];
+assert points[0].x == 0;
+assert points[1].x == 10;
+assert points[2].y == 15;
+
+// Test: Modify table in list
+points[0].x = 100;
+assert points[0].x == 100;
+
+// Test: List of user objects
+var users = [
+    {name: "Alice", age: 30, active: true},
+    {name: "Bob", age: 25, active: false},
+    {name: "Charlie", age: 35, active: true}
+];
+assert users[0].name == "Alice";
+assert users[1].age == 25;
+assert users[2].active == true;
+
+// Test: Table containing list containing table
+var company = {
+    employees: [
+        {name: "Alice", skills: ["lua", "python"]},
+        {name: "Bob", skills: ["java", "rust"]}
+    ]
+};
+assert company.employees[0].name == "Alice";
+assert company.employees[0].skills[0] == "lua";
+assert company.employees[1].skills[1] == "rust";
+
+// Test: Add table to list
+var items = [none, none];
+items[0] = {id: 1, value: "first"};
+items[1] = {id: 2, value: "second"};
+assert items[0].id == 1;
+assert items[1].value == "second";
+
+#pass

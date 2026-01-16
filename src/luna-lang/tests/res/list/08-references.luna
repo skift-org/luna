@@ -1,0 +1,49 @@
+// List Reference Behavior Tests
+
+// Test: Lists are references
+var a = [1, 2, 3];
+var b = a;
+b[0] = 100;
+assert a[0] == 100;  // a also changed
+
+// Test: Modifying through reference
+var original = [10, 20, 30];
+var ref = original;
+ref[1] = 200;
+assert original[1] == 200;
+
+// Test: Multiple references
+var list = [1, 2, 3];
+var ref1 = list;
+var ref2 = list;
+ref1[0] = 10;
+ref2[2] = 30;
+assert list[0] == 10;
+assert list[2] == 30;
+
+// Test: Function modifies list
+var modify = fn(arr) {
+    arr[0] = 999;
+};
+var data = [1, 2, 3];
+modify(data);
+assert data[0] == 999;
+
+// Test: Nested reference behavior
+var outer = [[1, 2], [3, 4]];
+var inner = outer[0];
+inner[0] = 100;
+assert outer[0][0] == 100;
+
+// Test: Reference equality
+var x = [1, 2, 3];
+var y = x;
+var z = [1, 2, 3];
+assert x == y;   // Same reference
+assert x == z;   // Same contents (lists compare by value)
+
+// Test: Different contents are not equal
+var diff = [1, 2, 4];
+assert not (x == diff);
+
+#pass

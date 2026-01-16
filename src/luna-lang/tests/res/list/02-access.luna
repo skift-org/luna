@@ -1,0 +1,34 @@
+// List Index Access Tests
+
+// Test: Access first element
+var list = [10, 20, 30];
+assert list[0] == 10;
+
+// Test: Access middle element
+assert list[1] == 20;
+
+// Test: Access last element
+assert list[2] == 30;
+
+// Test: Access with variable index
+var i = 1;
+assert list[i] == 20;
+
+// Test: Access nested list
+var nested = [[1, 2], [3, 4]];
+assert nested[0][0] == 1;
+assert nested[0][1] == 2;
+assert nested[1][0] == 3;
+assert nested[1][1] == 4;
+
+// Test: Access table in list
+var users = [{name: "Alice"}, {name: "Bob"}];
+assert users[0].name == "Alice";
+assert users[1].name == "Bob";
+
+// Test: Access function in list and call
+var funcs = [fn() { 42 }, fn() { 100 }];
+assert funcs[0]() == 42;
+assert funcs[1]() == 100;
+
+#pass

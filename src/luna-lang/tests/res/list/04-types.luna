@@ -1,0 +1,42 @@
+// List with Different Types Tests
+
+// Test: List of integers
+var ints = [1, 2, 3, 4, 5];
+assert ints[0] == 1;
+assert ints[4] == 5;
+
+// Test: List of numbers (floats)
+var floats = [1.5, 2.5, 3.5];
+assert floats[0] == 1.5;
+assert floats[2] == 3.5;
+
+// Test: List of strings
+var strings = ["hello", "world", "luna"];
+assert strings[0] == "hello";
+assert strings[2] == "luna";
+
+// Test: List of booleans
+var bools = [true, false, true];
+assert bools[0] == true;
+assert bools[1] == false;
+
+// Test: List of symbols
+var symbols = [#red, #green, #blue];
+assert symbols[0] == #red;
+assert symbols[2] == #blue;
+
+// Test: List of none values
+var nones = [none, none, none];
+assert nones[0] == none;
+assert nones[2] == none;
+
+// Test: Mixed list
+var mixed = [42, "hello", true, none, #symbol, 3.14];
+assert mixed[0] == 42;
+assert mixed[1] == "hello";
+assert mixed[2] == true;
+assert mixed[3] == none;
+assert mixed[4] == #symbol;
+assert mixed[5] == 3.14;
+
+#pass

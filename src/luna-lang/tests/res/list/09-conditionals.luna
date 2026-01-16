@@ -1,0 +1,31 @@
+// List in Conditionals Tests
+
+// Test: List in if condition (truthy)
+var myList = [1, 2, 3];
+var result1 = if (myList) "truthy" else "falsy";
+assert result1 == "truthy";
+
+// Test: Empty list is falsy
+var empty = [];
+var result2 = if (empty) "truthy" else "falsy";
+assert result2 == "falsy";
+
+// Test: Conditional list creation (needs block syntax)
+var useList = true;
+var data = if (useList) { [1, 2, 3] } else { {a: 1, b: 2} };
+assert data[0] == 1;
+
+// Test: Conditional element access
+var items = [10, 20, 30];
+var index = 1;
+var value = if (index >= 0) { items[index] } else { none };
+assert value == 20;
+
+// Test: Conditional function returning list
+var makeData = fn(asList) {
+    if (asList) { [1, 2, 3] } else { {x: 1} }
+};
+var asL = makeData(true);
+assert asL[0] == 1;
+
+#pass

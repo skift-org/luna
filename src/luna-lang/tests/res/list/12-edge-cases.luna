@@ -1,0 +1,52 @@
+// List Edge Cases Tests
+
+// Test: Single element list
+var single = [42];
+assert single[0] == 42;
+
+// Test: Reassign entire list
+var list = [1, 2, 3];
+list = [4, 5, 6];
+assert list[0] == 4;
+assert list[2] == 6;
+
+// Test: List in list literal
+var nested = [[1, 2, 3]];
+assert nested[0][0] == 1;
+assert nested[0][2] == 3;
+
+// Test: Empty nested lists
+var empty = [[], [], []];
+assert typeof(empty[0]) == #Object;
+
+// Test: Deeply nested access
+var deep = [[[[42]]]];
+assert deep[0][0][0][0] == 42;
+
+// Test: Modify deeply nested
+deep[0][0][0][0] = 100;
+assert deep[0][0][0][0] == 100;
+
+// Test: List with computed values
+var x = 5;
+var computed = [x, x + 1, x * 2, x * x];
+assert computed[0] == 5;
+assert computed[1] == 6;
+assert computed[2] == 10;
+assert computed[3] == 25;
+
+// Test: Immediately indexed list
+assert [10, 20, 30][0] == 10;
+assert [10, 20, 30][1] == 20;
+assert [10, 20, 30][2] == 30;
+
+// Test: Chained list access
+var chain = [[[[1, 2]], [[3, 4]]]];
+assert chain[0][0][0][0] == 1;
+assert chain[0][1][0][1] == 4;
+
+// Test: List in try-catch
+var data = try [1, 2, 3] catch (e) [];
+assert data[0] == 1;
+
+#pass

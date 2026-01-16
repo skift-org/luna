@@ -1,0 +1,30 @@
+// List typeof Tests
+
+// Test: Empty list typeof
+assert typeof([]) == #Object;
+
+// Test: Non-empty list typeof
+assert typeof([1, 2, 3]) == #Object;
+
+// Test: Nested list typeof
+assert typeof([[1], [2]]) == #Object;
+
+// Test: List variable typeof
+var list = [1, 2, 3];
+assert typeof(list) == #Object;
+
+// Test: List element typeof
+var mixed = [42, "hello", true, none, #sym];
+assert typeof(mixed[0]) == #Integer;
+assert typeof(mixed[1]) == #String;
+assert typeof(mixed[2]) == #Boolean;
+assert typeof(mixed[3]) == #None;
+assert typeof(mixed[4]) == #Symbol;
+
+// Test: Nested list element typeof
+var nested = [[1, 2], ["a", "b"]];
+assert typeof(nested[0]) == #Object;
+assert typeof(nested[0][0]) == #Integer;
+assert typeof(nested[1][0]) == #String;
+
+#pass

@@ -1,0 +1,48 @@
+// Nested List Tests
+
+// Test: 2D list (matrix)
+var matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+assert matrix[0][0] == 1;
+assert matrix[1][1] == 5;
+assert matrix[2][2] == 9;
+assert matrix[0][2] == 3;
+assert matrix[2][0] == 7;
+
+// Test: Modify nested list
+matrix[1][1] = 50;
+assert matrix[1][1] == 50;
+
+// Test: 3D list
+var cube = [
+    [[1, 2], [3, 4]],
+    [[5, 6], [7, 8]]
+];
+assert cube[0][0][0] == 1;
+assert cube[0][0][1] == 2;
+assert cube[0][1][0] == 3;
+assert cube[1][0][0] == 5;
+assert cube[1][1][1] == 8;
+
+// Test: Jagged arrays (different lengths)
+var jagged = [
+    [1],
+    [1, 2],
+    [1, 2, 3]
+];
+assert jagged[0][0] == 1;
+assert jagged[1][1] == 2;
+assert jagged[2][2] == 3;
+
+// Test: Mixed nesting with tables
+var complex = [
+    {items: [1, 2, 3]},
+    {items: [4, 5, 6]}
+];
+assert complex[0].items[0] == 1;
+assert complex[1].items[2] == 6;
+
+#pass

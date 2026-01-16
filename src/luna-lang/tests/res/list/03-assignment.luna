@@ -1,0 +1,42 @@
+// List Assignment Tests
+
+// Test: Assign to existing index
+var list = [1, 2, 3];
+list[0] = 10;
+assert list[0] == 10;
+
+// Test: Assign to middle
+list[1] = 20;
+assert list[1] == 20;
+
+// Test: Assign to last
+list[2] = 30;
+assert list[2] == 30;
+
+// Test: Assign different type
+var mixed = [1, 2, 3];
+mixed[0] = "one";
+assert mixed[0] == "one";
+mixed[1] = true;
+assert mixed[1] == true;
+mixed[2] = none;
+assert mixed[2] == none;
+
+// Test: Assign with variable index
+var arr = [0, 0, 0];
+var idx = 1;
+arr[idx] = 42;
+assert arr[1] == 42;
+
+// Test: Assign table to list element
+var data = [none, none];
+data[0] = {x: 1, y: 2};
+assert data[0].x == 1;
+assert data[0].y == 2;
+
+// Test: Assign function to list element
+var ops = [none];
+ops[0] = fn(x) { x * 2 };
+assert ops[0](5) == 10;
+
+#pass

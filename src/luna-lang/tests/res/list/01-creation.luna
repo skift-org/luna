@@ -1,0 +1,31 @@
+// List Creation Tests
+
+// Test: Empty list
+var empty = [];
+assert typeof(empty) == #Object;
+
+// Test: Single element list
+var single = [42];
+assert typeof(single) == #Object;
+
+// Test: Multiple elements
+var numbers = [1, 2, 3, 4, 5];
+assert typeof(numbers) == #Object;
+
+// Test: Mixed types
+var mixed = [1, "two", true, none, #symbol];
+assert typeof(mixed) == #Object;
+
+// Test: Nested lists
+var nested = [[1, 2], [3, 4], [5, 6]];
+assert typeof(nested) == #Object;
+
+// Test: List with tables
+var withTables = [{x: 1}, {x: 2}, {x: 3}];
+assert typeof(withTables) == #Object;
+
+// Test: List with functions
+var withFuncs = [fn(x) { x + 1 }, fn(x) { x * 2 }];
+assert typeof(withFuncs) == #Object;
+
+#pass
