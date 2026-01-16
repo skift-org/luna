@@ -1,0 +1,25 @@
+// Table Edge Cases Tests
+
+// Test: Table property access on just-created table
+assert ({x: 100}).x == 100;
+
+// Test: Chained property access on inline table
+assert ({data: {value: 42}}).data.value == 42;
+
+// Test: Table in try-catch
+var tryTable = try { {result: "success"} } catch (e) { {result: "error"} };
+assert tryTable.result == "success";
+
+// Test: Table property set in block
+var blockTest = {};
+{
+    blockTest.inBlock = true;
+}
+assert blockTest.inBlock == true;
+
+// Test: Table string conversion (typeof works)
+var strTest = {a: 1, b: 2};
+var strResult = typeof(strTest);
+assert strResult == #Object;
+
+#pass

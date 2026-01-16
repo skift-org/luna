@@ -10,100 +10,24 @@ import :objects;
 
 namespace Luna {
 
-static CompletionOr<Value> _builtinBoolean(Object params) {
-    return asBoolean(try$(opGet(params, Symbols::FROM)));
+static CompletionOr<Value> _builtinLen(Reference params) {
+    return opLen(try$(opGet(params, Symbols::OF)));
 }
 
-static CompletionOr<Value> _builtinInteger(Object params) {
-    return asInteger(try$(opGet(params, Symbols::FROM)));
-}
-
-static CompletionOr<Value> _builtinNumber(Object params) {
-    return asNumber(try$(opGet(params, Symbols::FROM)));
-}
-
-static CompletionOr<Value> _builtinSymbol(Object params) {
-    return asSymbol(try$(opGet(params, Symbols::FROM)));
-}
-
-static CompletionOr<Value> _builtinString(Object params) {
-    return asString(try$(opGet(params, Symbols::FROM)));
-}
-
-export CompletionOr<Object> builtins() {
-    Object env = try$(Environment::create(NONE));
+export CompletionOr<Reference> builtins() {
+    Reference env = try$(Environment::create(NONE));
 
     try$(env->decl(
-        "boolean"_sym,
+        "len"_sym,
         try$(
             Func::create(
                 env,
                 {
                     {
-                        Symbols::FROM,
+                        Symbols::OF,
                     },
                 },
-                Native{_builtinBoolean}
-            )
-        )
-    ));
-
-    try$(env->decl(
-        "integer"_sym,
-        try$(
-            Func::create(
-                env,
-                {
-                    {
-                        Symbols::FROM,
-                    },
-                },
-                Native{_builtinInteger}
-            )
-        )
-    ));
-
-    try$(env->decl(
-        "number"_sym,
-        try$(
-            Func::create(
-                env,
-                {
-                    {
-                        Symbols::FROM,
-                    },
-                },
-                Native{_builtinNumber}
-            )
-        )
-    ));
-
-    try$(env->decl(
-        "symbol"_sym,
-        try$(
-            Func::create(
-                env,
-                {
-                    {
-                        Symbols::FROM,
-                    },
-                },
-                Native{_builtinSymbol}
-            )
-        )
-    ));
-
-    try$(env->decl(
-        "string"_sym,
-        try$(
-            Func::create(
-                env,
-                {
-                    {
-                        Symbols::FROM,
-                    },
-                },
-                Native{_builtinString}
+                Native{_builtinLen}
             )
         )
     ));

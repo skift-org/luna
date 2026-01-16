@@ -7,7 +7,11 @@ using namespace Karm;
 
 namespace Luna::Tests {
 
-test$("table-get-set") {
+test$("luna-run-all") {
+    auto testsDir = try$(Sys::Dir::open("bundle://luna-lang.tests/"_url));
+    for (auto& e : testsDir.entries()) {
+        testsDir.path()
+    }
     auto table = try$(Table::create());
 
     try$(table->set(

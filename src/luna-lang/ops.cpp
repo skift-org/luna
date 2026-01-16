@@ -4,6 +4,7 @@ module;
 
 export module Luna:ops;
 
+import Karm.Logger;
 import :base;
 
 namespace Luna {
@@ -30,7 +31,7 @@ Symbol typeOf(Value v) {
         [](String) {
             return Symbols::STRING;
         },
-        [](Object) {
+        [](Reference) {
             return Symbols::OBJECT;
         },
     });
@@ -71,7 +72,7 @@ Boolean isString(Value v) {
 }
 
 Boolean isObject(Value v) {
-    return v.is<Object>();
+    return v.is<Reference>();
 }
 
 Boolean is(Value v, Symbol type) {
@@ -125,7 +126,7 @@ CompletionOr<Boolean> asBoolean(Value v) {
         [](String s) -> CompletionOr<Boolean> {
             return Ok(s.len() > 0);
         },
-        [](Object o) -> CompletionOr<Boolean> {
+        [](Reference o) -> CompletionOr<Boolean> {
             return o->boolean();
         },
     });
@@ -197,7 +198,7 @@ CompletionOr<String> asString(Value v) {
         [](String s) -> CompletionOr<String> {
             return Ok<String>(s);
         },
-        [](Object o) -> CompletionOr<String> {
+        [](Reference o) -> CompletionOr<String> {
             auto res = try$(o->string());
             if (not isString(res))
                 return Completion::exception("expected string");
@@ -217,12 +218,12 @@ CompletionOr<Symbol> asSymbol(Value v) {
     });
 }
 
-CompletionOr<Object> asObject(Value v) {
+CompletionOr<Reference> asObject(Value v) {
     return v.visit(Visitor{
-        [](Object o) -> CompletionOr<Object> {
+        [](Reference o) -> CompletionOr<Reference> {
             return Ok(o);
         },
-        [](auto) -> CompletionOr<Object> {
+        [](auto) -> CompletionOr<Reference> {
             return Completion::exception("could not convert to object");
         },
     });
@@ -250,11 +251,23 @@ CompletionOr<Value> as(Value v, Symbol type) {
 // MARK: Operations ------------------------------------------------------------
 
 CompletionOr<Boolean> opEq(Value lhs, Value rhs) {
-    if (auto o = lhs.is<Object>())
+    if (auto o = lhs.is<Reference>())
         return o->unwrap().eq(rhs);
 
-    if (auto o = rhs.is<Object>())
+    if (auto o = rhs.is<Reference>())
         return o->unwrap().eq(lhs);
+
+    if (isSymbol(lhs) or isSymbol(rhs)) {
+        if (isSymbol(lhs) != isSymbol(rhs))
+            return Ok(false);
+        return Ok(try$(asSymbol(lhs)) == try$(asSymbol(rhs)));
+    }
+
+    if (isString(lhs) or isString(rhs)) {
+        if (isString(lhs) != isString(rhs))
+            return Ok(false);
+        return Ok(try$(asString(lhs)) == try$(asString(rhs)));
+    }
 
     if (isNumber(lhs) or isNumber(rhs))
         return Ok(try$(asNumber(lhs)) == try$(asNumber(rhs)));
@@ -295,7 +308,7 @@ static Symbol _fromOrdering(std::strong_ordering ordering) {
 }
 
 CompletionOr<Symbol> opCmp(Value lhs, Value rhs) {
-    if (auto o = lhs.is<Object>())
+    if (auto o = lhs.is<Reference>())
         return o->unwrap().cmp(rhs);
 
     if (isString(lhs) or isString(rhs))
@@ -365,11 +378,15 @@ CompletionOr<Boolean> opHas(Value val, Value key) {
 }
 
 CompletionOr<Value> opLen(Value val) {
-    auto obj = try$(asObject(val));
-    return obj->len();
+    if (isString(val)) {
+        return Ok((Integer)try$(asString(val)).len());
+    } else {
+        auto obj = try$(asObject(val));
+        return obj->len();
+    }
 }
 
-CompletionOr<Value> opCall(Value val, Object params) {
+CompletionOr<Value> opCall(Value val, Reference params) {
     auto obj = try$(asObject(val));
     auto res = obj->call(params);
     if (res)
@@ -526,11 +543,11 @@ CompletionOr<Value> opBinOr(Value lhs, Value rhs) {
 }
 
 template <typename T, typename... Args>
-CompletionOr<Object> opNew(Args&&... args) {
+CompletionOr<Reference> opNew(Args&&... args) {
     return Ok(makeRc<T>(std::forward<Args>(args)...));
 }
 
-export CompletionOr<Value> opEval(Value v, Object env) {
+export CompletionOr<Value> opEval(Value v, Reference env) {
     return v.visit(Visitor{
         [&](auto) -> CompletionOr<Value> {
             return Ok(v);
@@ -538,7 +555,7 @@ export CompletionOr<Value> opEval(Value v, Object env) {
         [&](Symbol s) -> CompletionOr<Value> {
             return env->get(s);
         },
-        [&](Object o) -> CompletionOr<Value> {
+        [&](Reference o) -> CompletionOr<Value> {
             return o->eval(env);
         },
     });

@@ -14,7 +14,7 @@ export struct Base;
 
 // MARK: Primitives ------------------------------------------------------------
 
-using Object = Rc<Base>;
+using Reference = Rc<Base>;
 
 export using Boolean = bool;
 
@@ -22,7 +22,7 @@ export using Integer = i64;
 
 export using Number = f64;
 
-export struct Value : Union<None, Boolean, Integer, Number, Symbol, String, Object> {
+export struct Value : Union<None, Boolean, Integer, Number, Symbol, String, Reference> {
     using Union::Union;
 };
 
@@ -30,6 +30,7 @@ namespace Symbols {
 
 Symbol THIS = "this"_sym;
 Symbol FROM = "from"_sym;
+Symbol OF = "of"_sym;
 Symbol PARENT = "parent"_sym;
 Symbol RHS = "rhs"_sym;
 
@@ -38,19 +39,19 @@ Symbol EQUIVALENT = "equivalent"_sym;
 Symbol GREATER = "greater"_sym;
 Symbol UNORDERED = "unordered"_sym;
 
-Symbol NONE = "none"_sym;
-Symbol BOOLEAN = "boolean"_sym;
-Symbol INTEGER = "integer"_sym;
-Symbol NUMBER = "number"_sym;
-Symbol SYMBOL = "symbol"_sym;
-Symbol STRING = "string"_sym;
-Symbol OBJECT = "object"_sym;
+Symbol NONE = "None"_sym;
+Symbol BOOLEAN = "Boolean"_sym;
+Symbol INTEGER = "Integer"_sym;
+Symbol NUMBER = "Number"_sym;
+Symbol SYMBOL = "Symbol"_sym;
+Symbol STRING = "String"_sym;
+Symbol OBJECT = "Object"_sym;
 
 } // namespace Symbols
 
 // MARK: Exception -------------------------------------------------------------
 
-struct Completion {
+export struct Completion {
     enum struct Type {
         RETURN,
         CONTINUE,
@@ -120,11 +121,11 @@ struct Base {
         return Completion::exception("not comparable");
     }
 
-    virtual CompletionOr<Value> eval([[maybe_unused]] Object env) {
+    virtual CompletionOr<Value> eval([[maybe_unused]] Reference env) {
         return Completion::exception("not evaluable");
     }
 
-    virtual CompletionOr<Value> call([[maybe_unused]] Object params) {
+    virtual CompletionOr<Value> call([[maybe_unused]] Reference params) {
         return Completion::exception("not callable");
     }
 

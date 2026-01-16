@@ -1,0 +1,27 @@
+// Nested Tables Tests
+
+// Test: Creating nested tables
+var outer = {
+    inner: {
+        value: 42
+    }
+};
+assert outer.inner.value == 42;
+
+// Test: Assigning nested table
+var container = {};
+container.data = {};
+container.data.item = "nested";
+assert container.data.item == "nested";
+
+// Test: Multiple levels of nesting
+var deep = {
+    level1: {
+        level2: {
+            level3: "deep value"
+        }
+    }
+};
+assert deep.level1.level2.level3 == "deep value";
+
+#pass

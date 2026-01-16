@@ -1,0 +1,49 @@
+// Table Equality Tests
+
+// Test: Empty tables are equal
+assert {} == {};
+
+// Test: Tables with same content are equal
+assert {x: 1} == {x: 1};
+assert {a: 1, b: 2} == {a: 1, b: 2};
+assert {a: 1, b: 2} == {b: 2, a: 1};
+
+// Test: Tables with different content are not equal
+var eq1 = {x: 1} == {x: 2};
+assert eq1 == false;
+var eq2 = {x: 1} == {y: 1};
+assert eq2 == false;
+var eq3 = {a: 1} == {a: 1, b: 2};
+assert eq3 == false;
+
+// Test: Nested table equality
+assert {inner: {val: 42}} == {inner: {val: 42}};
+var nestedNeq = {inner: {val: 42}} == {inner: {val: 99}};
+assert nestedNeq == false;
+
+// Test: Tables with different value types
+assert {x: 1} == {x: 1};
+var typeNeq1 = {x: 1} == {x: "1"};
+assert typeNeq1 == false;
+// Note: 1 == 1.0 is true due to numeric coercion, so {x: 1} == {x: 1.0} is also true
+
+// Test: Table not equal to non-table (primitives)
+var neqNone = {} == none;
+assert neqNone == false;
+var neqNum = {} == 0;
+assert neqNum == false;
+var neqStr = {} == "";
+assert neqStr == false;
+// Note: {} == [] is true because both are empty objects (structural equality)
+
+// Test: List equality (bonus)
+assert [] == [];
+assert [1, 2, 3] == [1, 2, 3];
+var listNeq1 = [1, 2] == [1, 2, 3];
+assert listNeq1 == false;
+var listNeq2 = [1, 2, 3] == [1, 2];
+assert listNeq2 == false;
+var listNeq3 = [1, 2, 3] == [3, 2, 1];
+assert listNeq3 == false;
+
+#pass

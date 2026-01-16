@@ -36,8 +36,13 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
 
     auto evalRes = Luna::opEval(parseRes.take(), Luna::builtins().take());
     if (not evalRes) {
-        logError("runtime error {}: {}", scriptArg.value(), evalRes.none().value);
-        co_return Error::invalidInput("runtime error");
+        auto completion = evalRes.none();
+        if (completion.type == Luna::Completion::EXCEPTION) {
+            logError("runtime error {}: {}", scriptArg.value(), evalRes.none().value);
+            co_return Error::invalidInput("runtime error");
+        }
+
+        evalRes = Ok(completion.value);
     }
 
     Sys::println("--- result ---\n{}", evalRes.unwrap());

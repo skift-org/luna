@@ -1,0 +1,14 @@
+// Table as Boolean Tests
+
+// Test: Empty table is falsy
+assert (if ({}) "truthy" else "falsy") == "falsy";
+
+// Test: Non-empty table is truthy
+assert (if ({a: 1}) "truthy" else "falsy") == "truthy";
+
+// Test: Table with single property is truthy
+var single = {};
+single.key = "value";
+assert (if (single) "truthy" else "falsy") == "truthy";
+
+#pass

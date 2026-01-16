@@ -1,0 +1,18 @@
+// Table in Expressions Tests
+
+// Test: Table in variable declaration
+var t1 = {value: 10};
+var t2 = t1;
+assert t2.value == 10;
+
+// Test: Table in if condition
+var result = if ({a: 1}) "has content" else "empty";
+assert result == "has content";
+
+// Test: Table property in arithmetic
+var calc = {x: 5, y: 3};
+assert calc.x + calc.y == 8;
+assert calc.x - calc.y == 2;
+assert calc.x * calc.y == 15;
+
+#pass

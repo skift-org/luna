@@ -31,12 +31,13 @@ export struct Token {
         VAR,   // var
         CONST, // const
 
-        IF,    // if
-        ELSE,  // else
-        FOR,   // or
-        WHILE, // while
-        TRY,   // try
-        CATCH, // catch
+        IF,     // if
+        ELSE,   // else
+        FOR,    // or
+        WHILE,  // while
+        TRY,    // try
+        CATCH,  // catch
+        ASSERT, // assert
 
         RETURN,   // return
         BREAK,    // break
@@ -155,12 +156,20 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s) {
                 kind = Token::FOR;
             else if (text == "while")
                 kind = Token::WHILE;
+            else if (text == "try")
+                kind = Token::TRY;
+            else if (text == "catch")
+                kind = Token::CATCH;
+            else if (text == "assert")
+                kind = Token::ASSERT;
             else if (text == "return")
                 kind = Token::RETURN;
             else if (text == "break")
                 kind = Token::BREAK;
             else if (text == "continue")
                 kind = Token::CONTINUE;
+            else if (text == "throw")
+                kind = Token::THROW;
             else if (text == "none")
                 kind = Token::NONE;
             else if (text == "true")
@@ -363,7 +372,7 @@ enum struct Prec {
 
 static CompletionOr<Value> _intoAssign(Value lhs, Value rhs) {
     if (isSymbol(lhs)) {
-        return opNew<SetEnvExpr>(lhs, rhs);
+        return opNew<SetEnvExpr>(try$(opNew<QuoteExpr>(lhs)), rhs);
     }
 
     if (isObject(lhs)) {
@@ -496,6 +505,13 @@ static CompletionOr<Value> _parseTry(Cursor<Token>& c) {
     return opNew<TryExpr>(try_, ident, catch_);
 }
 
+static CompletionOr<Value> _parseAssert(Cursor<Token>& c) {
+    c.next();
+    _eatWhitespace(c);
+    auto expr = try$(_parseExpr(c, Prec::LOWEST));
+    return opNew<AssertExpr>(expr);
+}
+
 static CompletionOr<Value> _parseFunc(Cursor<Token>& c) {
     c.next();
     _eatWhitespace(c);
@@ -611,6 +627,7 @@ static CompletionOr<Value> _parseBlock(Cursor<Token>& c) {
     if (c.skip(Token::RBRACE))
         return opNew<BlockExpr>(exprs);
 
+    logDebug("{}", *c);
     return Completion::exception("expected '}'");
 }
 
@@ -695,6 +712,14 @@ static CompletionOr<Value> _parsePrefix(Cursor<Token>& c) {
         return opNew<BreakExpr>(try$(_parseExpr(c, Prec::LOWEST)));
     }
 
+    case Token::THROW: {
+        c.next();
+        _eatWhitespace(c);
+        if (*c == Token::SEMICOLON)
+            return opNew<ThrowExpr>(NONE);
+        return opNew<ThrowExpr>(try$(_parseExpr(c, Prec::LOWEST)));
+    }
+
     case Token::IF:
         return _parseIf(c);
 
@@ -703,6 +728,9 @@ static CompletionOr<Value> _parsePrefix(Cursor<Token>& c) {
 
     case Token::TRY:
         return _parseTry(c);
+
+    case Token::ASSERT:
+        return _parseAssert(c);
 
     case Token::FN:
         return _parseFunc(c);
@@ -754,7 +782,7 @@ static Prec _peekPrec(Cursor<Token>& c) {
 }
 
 static CompletionOr<Value> _parseCall(Cursor<Token>& c, Value func) {
-    c.next();
+    // Note: The LPAREN token is already consumed by _parseInfix
     _eatWhitespace(c);
 
     Vec<ArgExpr> args;
@@ -832,7 +860,7 @@ static CompletionOr<Value> _parseInfix(Cursor<Token>& c, Value lhs) {
         return opNew<ModExpr>(lhs, try$(_parseExpr(c, Prec::FACTOR)));
 
     case Token::DOT:
-        return opNew<GetExpr>(lhs, try$(_parseExpr(c, Prec::CALL)));
+        return opNew<GetExpr>(lhs, try$(opNew<QuoteExpr>(try$(_parseIdentOrValue(c)))));
     case Token::LPAREN:
         return _parseCall(c, lhs);
     case Token::LBRACKET:

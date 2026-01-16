@@ -1,0 +1,11 @@
+// Table typeof and is Tests
+
+// Test: typeof table returns #Object
+assert typeof({}) == #Object;
+assert typeof({a: 1}) == #Object;
+
+// Test: table is #Object
+assert {} is #Object;
+assert {foo: "bar"} is #Object;
+
+#pass

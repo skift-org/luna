@@ -1,0 +1,20 @@
+// Table Modification Tests
+
+// Test: Adding new properties to existing table
+var growing = {};
+assert len(growing) == 0;
+growing.a = 1;
+assert len(growing) == 1;
+growing.b = 2;
+assert len(growing) == 2;
+growing.c = 3;
+assert len(growing) == 3;
+
+// Test: Modifying existing properties
+var mutable = {counter: 0};
+mutable.counter = mutable.counter + 1;
+assert mutable.counter == 1;
+mutable.counter = mutable.counter + 1;
+assert mutable.counter == 2;
+
+#pass

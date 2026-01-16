@@ -1,0 +1,19 @@
+// Table Creation Tests
+
+// Test: Empty table creation
+var empty = {};
+assert len(empty) == 0;
+
+// Test: Table with symbol keys
+var person = {name: "Alice", age: 30};
+assert len(person) == 2;
+
+// Test: Table with integer keys (like an array)
+var nums = {0: "zero", 1: "one", 2: "two"};
+assert len(nums) == 3;
+
+// Test: Table with mixed key types
+var mixed = {foo: "bar", 42: "answer", 3.14: "pi"};
+assert len(mixed) == 3;
+
+#pass

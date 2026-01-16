@@ -1,0 +1,39 @@
+// Table Property Access and Assignment Tests
+
+// Setup
+var person = {name: "Alice", age: 30};
+var nums = {0: "zero", 1: "one", 2: "two"};
+
+// Test: Dot notation property access
+assert person.name == "Alice";
+assert person.age == 30;
+
+// Test: Bracket notation property access with symbol
+assert person[#name] == "Alice";
+
+// Test: Bracket notation property access with integer
+assert nums[0] == "zero";
+assert nums[1] == "one";
+assert nums[2] == "two";
+
+// Test: Dot notation assignment
+var obj = {};
+obj.x = 10;
+obj.y = 20;
+assert obj.x == 10;
+assert obj.y == 20;
+assert len(obj) == 2;
+
+// Test: Bracket notation assignment
+var arr = {};
+arr[0] = "first";
+arr[1] = "second";
+assert arr[0] == "first";
+assert arr[1] == "second";
+
+// Test: Overwriting existing property
+obj.x = 100;
+assert obj.x == 100;
+assert len(obj) == 2;
+
+#pass

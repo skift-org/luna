@@ -1,0 +1,34 @@
+// Test: Try branches propagate values
+assert (try "P" catch (e) "F") == "P";
+assert (try {throw; "E"} catch (e) "P") == "P";
+assert (try {throw "P"; assert false} catch (e) e) == "P";
+
+// Test: Inner try-catch handles the exception completely
+assert (
+    try {
+        try {
+            throw "Inner";
+        } catch (e) {
+            "Caught Inner"; // This becomes the value of the inner block
+        }
+    } catch (e) {
+        "Caught Outer";
+    }
+) == "Caught Inner";
+
+// Test: Throwing a Number
+assert (try { throw 42 } catch (e) e + 1) == 43;
+
+// Test: Throwing a Boolean
+assert (try { throw true } catch (e) not e) == false;
+
+// Test: Evaluating expression before throw
+assert (
+    try {
+        throw (10 + 20);
+    } catch (e) {
+        e;
+    }
+) == 30;
+
+#pass

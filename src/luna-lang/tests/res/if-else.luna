@@ -1,0 +1,36 @@
+// Test: True condition returns the 'then' block
+assert (if (true) "TrueBranch" else "FalseBranch") == "TrueBranch";
+
+// Test: False condition returns the 'else' block
+assert (if (false) "TrueBranch" else "FalseBranch") == "FalseBranch";
+
+// Test: Nested logic
+// Logic: if(true) -> enters block -> if(false) -> skips -> else -> returns "InnerElse"
+assert (
+    if (true)
+        if (false) "InnerIf" else "InnerElse"
+    else
+        "OuterElse"
+) == "InnerElse";
+
+// Test: Chained conditions
+var result = if (false) {
+    "A";
+} else if (true) {
+    "B";
+} else {
+    "C";
+};
+
+assert result == "B";
+
+// Test: Non-boolean conditions (Update based on your language design)
+// If you support truthiness:
+assert (if (1) "True" else "False") == "True";
+assert (if (none) "True" else "False") == "False";
+
+// Test: Missing else branch
+// Assuming it returns none when the condition is false and no else exists
+assert (if (false) "Something") == none;
+
+#pass

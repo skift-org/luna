@@ -1,0 +1,14 @@
+// Table with Computed Properties Tests
+
+// Test: Access with variable key
+var key = #name;
+var data = {name: "test"};
+assert data[key] == "test";
+
+// Test: Access with expression key
+var index = 1;
+var indexed = {0: "a", 1: "b", 2: "c"};
+assert indexed[index] == "b";
+assert indexed[index + 1] == "c";
+
+#pass

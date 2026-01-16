@@ -1,0 +1,41 @@
+// Table with Different Value Types Tests
+
+// Test: Table with none values
+var withNone = {nothing: none};
+assert withNone.nothing == none;
+
+// Test: Table with boolean values
+var withBool = {yes: true, no: false};
+assert withBool.yes == true;
+assert withBool.no == false;
+
+// Test: Table with number values
+var withNum = {integer: 42, float: 3.14};
+assert withNum.integer == 42;
+assert withNum.float == 3.14;
+
+// Test: Table with string values
+var withStr = {greeting: "hello", name: "world"};
+assert withStr.greeting == "hello";
+assert withStr.name == "world";
+
+// Test: Table with symbol values
+var withSym = {status: #active, type: #user};
+assert withSym.status == #active;
+assert withSym.type == #user;
+
+// Test: Table with list values
+var withList = {items: [1, 2, 3]};
+assert len(withList.items) == 3;
+assert withList.items[0] == 1;
+assert withList.items[1] == 2;
+assert withList.items[2] == 3;
+
+// Test: Table with function values
+var withFunc = {
+    add: fn(a, b) { a + b },
+    greet: fn(name) { "Hello, " }
+};
+assert withFunc.add(2, 3) == 5;
+
+#pass

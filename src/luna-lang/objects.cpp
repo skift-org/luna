@@ -15,7 +15,7 @@ export struct Table : Base {
     Table(Map<Value, Value> fields = {})
         : _fields(std::move(fields)) {}
 
-    static CompletionOr<Object> create(Map<Value, Value> fields = {}) {
+    static CompletionOr<Reference> create(Map<Value, Value> fields = {}) {
         return Ok(makeRc<Table>(fields));
     }
 
@@ -43,17 +43,17 @@ export struct Table : Base {
             return Ok(false);
         auto obj = asObject(rhs).unwrap();
 
-        if (opEq(try$(len()), try$(opLen(rhs))))
+        if (not try$(opEq(try$(len()), try$(opLen(rhs)))))
             return Ok(false);
 
         for (auto& [k, v] : _fields.iterUnordered()) {
             if (not try$(opHas(rhs, k)))
                 return Ok(false);
 
-            if (not try$(opEq(v, try$(opGet(rhs, v)))))
+            if (not try$(opEq(v, try$(opGet(rhs, k)))))
                 return Ok(false);
         }
-        return Ok(false);
+        return Ok(true);
     }
 
     CompletionOr<Value> string() override {
@@ -88,7 +88,7 @@ export struct List : Base {
     List(Vec<Value> items = {})
         : _items(std::move(items)) {}
 
-    static CompletionOr<Object> create(Vec<Value> items = {}) {
+    static CompletionOr<Reference> create(Vec<Value> items = {}) {
         return Ok(makeRc<List>(items));
     }
 
@@ -124,7 +124,7 @@ export struct List : Base {
             return Ok(false);
         auto obj = asObject(rhs).unwrap();
 
-        if (opEq(try$(len()), try$(opLen(rhs))))
+        if (not try$(opEq(try$(len()), try$(opLen(rhs)))))
             return Ok(false);
 
         Integer index = 0;
@@ -136,7 +136,7 @@ export struct List : Base {
                 return Ok(false);
             index++;
         }
-        return Ok(false);
+        return Ok(true);
     }
 
     CompletionOr<Value> string() override {
@@ -164,30 +164,34 @@ export struct List : Base {
 
 export struct Environment : Base {
     Value _parent;
-    Object _decls = makeRc<Table>();
+    Reference _decls = makeRc<Table>();
 
     Environment(Value parent) : _parent(parent) {}
 
-    static CompletionOr<Object> create(Value parent) {
+    static CompletionOr<Reference> create(Value parent) {
         return Ok(makeRc<Environment>(parent));
     }
 
     CompletionOr<Value> get(Value key) override {
         if (try$(opHas(_decls, key)))
             return opGet(_decls, key);
-        else if (asBoolean(_parent))
+
+        if (try$(asBoolean(_parent)))
             return opGet(_parent, key);
-        else
-            return Completion::exception("not defined");
+
+        return Completion::exception("not defined");
     }
 
     CompletionOr<> set(Value key, Value value) override {
         if (try$(opHas(_decls, key)))
             return opSet(_decls, key, value);
-        else if (asBoolean(_parent))
-            return opSet(_parent, key, value);
-        else
-            return opSet(_decls, key, value);
+
+        if (try$(asBoolean(_parent))) {
+            if (try$(opHas(_parent, key)))
+                return opSet(_parent, key, value);
+        }
+
+        return opSet(_decls, key, value);
     }
 
     CompletionOr<> decl(Value key, Value value) override {
@@ -197,10 +201,11 @@ export struct Environment : Base {
     CompletionOr<Boolean> has(Value key) override {
         if (try$(opHas(_decls, key)))
             return Ok(true);
-        else if (asBoolean(_parent))
+
+        if (try$(asBoolean(_parent)))
             return opHas(_parent, key);
-        else
-            return Ok(false);
+
+        return Ok(false);
     }
 };
 
@@ -210,25 +215,25 @@ struct Param {
     bool required = false;
 };
 
-using Native = Func<CompletionOr<Value>(Object params)>;
+using Native = Func<CompletionOr<Value>(Reference params)>;
 
 using Code = Union<
     Value,
     Native>;
 
 export struct Func : Base {
-    Object _env;
+    Reference _env;
     Vec<Param> _sig;
     Code _code;
 
-    Func(Object env, Vec<Param> sig, Code code)
+    Func(Reference env, Vec<Param> sig, Code code)
         : _env(env), _sig(sig), _code(std::move(code)) {}
 
-    static CompletionOr<Object> create(Object env, Vec<Param> sig, Code code) {
+    static CompletionOr<Reference> create(Reference env, Vec<Param> sig, Code code) {
         return Ok(makeRc<Func>(env, sig, std::move(code)));
     }
 
-    CompletionOr<Value> call(Object params) override {
+    CompletionOr<Value> call(Reference params) override {
         auto locals = try$(Environment::create(_env));
 
         Integer index = 0;
@@ -236,7 +241,7 @@ export struct Func : Base {
             if (try$(opHas(params, s.key))) {
                 try$(opSet(locals, s.key, try$(opGet(params, s.key))));
             } else if (try$(opHas(params, index))) {
-                try$(opSet(locals, index, try$(opGet(params, s.key))));
+                try$(opSet(locals, s.key, try$(opGet(params, index))));
                 index++;
             } else if (not s.required) {
                 try$(opSet(locals, s.key, s.value));

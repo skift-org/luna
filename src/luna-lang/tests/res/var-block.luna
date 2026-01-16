@@ -1,0 +1,40 @@
+// Test: Empty block (returns null/nil usually)
+assert {none} == none;
+
+// Test: Block evaluates to the last expression
+assert {
+    1;
+    2;
+    3;
+} == 3;
+
+// Test: Block result used in assignment
+var result = {
+    var x = 10;
+    x * 2;
+};
+assert result == 20;
+
+// Test: Inner block can read outer variables
+var outer = 10;
+assert {
+    outer;
+} == 10;
+
+// Test: Inner block can MODIFY outer variables (if not shadowed)
+var x = 10;
+{
+    x = 20;
+}
+assert x == 20;
+
+// Test: Variable Shadowing (The "Shielding" effect)
+var a = "Global";
+{
+    var a = "Local"; // Declaring a new 'a' here shadows the global one
+    assert a == "Local";
+}
+// Once we exit the block, 'a' should be "Global" again
+assert a == "Global";
+
+#pass

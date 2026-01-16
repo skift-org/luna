@@ -1,0 +1,321 @@
+// ============================================================================
+// Table Type - Comprehensive Tests
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// SECTION 1: Table Creation
+// ----------------------------------------------------------------------------
+
+// Test: Empty table creation
+var empty = {};
+assert len(empty) == 0;
+
+// Test: Table with symbol keys
+var person = {name: "Alice", age: 30};
+assert len(person) == 2;
+
+// Test: Table with integer keys (like an array)
+var nums = {0: "zero", 1: "one", 2: "two"};
+assert len(nums) == 3;
+
+// Test: Table with mixed key types
+var mixed = {foo: "bar", 42: "answer", 3.14: "pi"};
+assert len(mixed) == 3;
+
+// ----------------------------------------------------------------------------
+// SECTION 2: Property Access and Assignment
+// ----------------------------------------------------------------------------
+
+// Test: Dot notation property access
+assert person.name == "Alice";
+assert person.age == 30;
+
+// Test: Bracket notation property access with symbol
+assert person[#name] == "Alice";
+
+// Test: Bracket notation property access with integer
+assert nums[0] == "zero";
+assert nums[1] == "one";
+assert nums[2] == "two";
+
+// Test: Dot notation assignment
+var obj = {};
+obj.x = 10;
+obj.y = 20;
+assert obj.x == 10;
+assert obj.y == 20;
+assert len(obj) == 2;
+
+// Test: Bracket notation assignment
+var arr = {};
+arr[0] = "first";
+arr[1] = "second";
+assert arr[0] == "first";
+assert arr[1] == "second";
+
+// Test: Overwriting existing property
+obj.x = 100;
+assert obj.x == 100;
+assert len(obj) == 2;
+
+// ----------------------------------------------------------------------------
+// SECTION 3: Table as Boolean
+// ----------------------------------------------------------------------------
+
+// Test: Empty table is falsy
+assert (if ({}) "truthy" else "falsy") == "falsy";
+
+// Test: Non-empty table is truthy
+assert (if ({a: 1}) "truthy" else "falsy") == "truthy";
+
+// Test: Table with single property is truthy
+var single = {};
+single.key = "value";
+assert (if (single) "truthy" else "falsy") == "truthy";
+
+// ----------------------------------------------------------------------------
+// SECTION 4: Table typeof and is
+// ----------------------------------------------------------------------------
+
+// Test: typeof table returns #Object
+assert typeof({}) == #Object;
+assert typeof({a: 1}) == #Object;
+
+// Test: table is #Object
+assert {} is #Object;
+assert {foo: "bar"} is #Object;
+
+// ----------------------------------------------------------------------------
+// SECTION 5: Nested Tables
+// ----------------------------------------------------------------------------
+
+// Test: Creating nested tables
+var outer = {
+    inner: {
+        value: 42
+    }
+};
+assert outer.inner.value == 42;
+
+// Test: Assigning nested table
+var container = {};
+container.data = {};
+container.data.item = "nested";
+assert container.data.item == "nested";
+
+// Test: Multiple levels of nesting
+var deep = {
+    level1: {
+        level2: {
+            level3: "deep value"
+        }
+    }
+};
+assert deep.level1.level2.level3 == "deep value";
+
+// ----------------------------------------------------------------------------
+// SECTION 6: Table with Different Value Types
+// ----------------------------------------------------------------------------
+
+// Test: Table with none values
+var withNone = {nothing: none};
+assert withNone.nothing == none;
+
+// Test: Table with boolean values
+var withBool = {yes: true, no: false};
+assert withBool.yes == true;
+assert withBool.no == false;
+
+// Test: Table with number values
+var withNum = {integer: 42, float: 3.14};
+assert withNum.integer == 42;
+assert withNum.float == 3.14;
+
+// Test: Table with string values
+var withStr = {greeting: "hello", name: "world"};
+assert withStr.greeting == "hello";
+assert withStr.name == "world";
+
+// Test: Table with symbol values
+var withSym = {status: #active, type: #user};
+assert withSym.status == #active;
+assert withSym.type == #user;
+
+// Test: Table with list values
+var withList = {items: [1, 2, 3]};
+assert len(withList.items) == 3;
+assert withList.items[0] == 1;
+assert withList.items[1] == 2;
+assert withList.items[2] == 3;
+
+// Test: Table with function values
+var withFunc = {
+    add: fn(a, b) { a + b },
+    greet: fn(name) { "Hello, " }
+};
+assert withFunc.add(2, 3) == 5;
+
+// ----------------------------------------------------------------------------
+// SECTION 7: Table in Expressions
+// ----------------------------------------------------------------------------
+
+// Test: Table in variable declaration
+var t1 = {value: 10};
+var t2 = t1;
+assert t2.value == 10;
+
+// Test: Table in if condition
+var result = if ({a: 1}) "has content" else "empty";
+assert result == "has content";
+
+// Test: Table property in arithmetic
+var calc = {x: 5, y: 3};
+assert calc.x + calc.y == 8;
+assert calc.x - calc.y == 2;
+assert calc.x * calc.y == 15;
+
+// ----------------------------------------------------------------------------
+// SECTION 8: Table Modification
+// ----------------------------------------------------------------------------
+
+// Test: Adding new properties to existing table
+var growing = {};
+assert len(growing) == 0;
+growing.a = 1;
+assert len(growing) == 1;
+growing.b = 2;
+assert len(growing) == 2;
+growing.c = 3;
+assert len(growing) == 3;
+
+// Test: Modifying existing properties
+var mutable = {counter: 0};
+mutable.counter = mutable.counter + 1;
+assert mutable.counter == 1;
+mutable.counter = mutable.counter + 1;
+assert mutable.counter == 2;
+
+// ----------------------------------------------------------------------------
+// SECTION 9: Table with Computed Properties (if supported)
+// ----------------------------------------------------------------------------
+
+// Test: Access with variable key
+var key = #name;
+var data = {name: "test"};
+assert data[key] == "test";
+
+// Test: Access with expression key
+var index = 1;
+var indexed = {0: "a", 1: "b", 2: "c"};
+assert indexed[index] == "b";
+assert indexed[index + 1] == "c";
+
+// ----------------------------------------------------------------------------
+// SECTION 10: Table in Functions
+// ----------------------------------------------------------------------------
+
+// Test: Table as function parameter
+var getX = fn(point) { point.x };
+assert getX({x: 42, y: 10}) == 42;
+
+// Test: Function returning table
+var createPoint = fn(x, y) { {x: x, y: y} };
+var point = createPoint(5, 10);
+assert point.x == 5;
+assert point.y == 10;
+
+// Test: Modifying table in function
+var increment = fn(obj) { obj.value = obj.value + 1 };
+var counter = {value: 0};
+increment(counter);
+assert counter.value == 1;
+increment(counter);
+assert counter.value == 2;
+
+// ----------------------------------------------------------------------------
+// SECTION 11: Table String Conversion
+// ----------------------------------------------------------------------------
+
+// Note: The exact string format may vary; these test that conversion works
+var strTest = {a: 1, b: 2};
+// String conversion should not throw an error
+var strResult = typeof(strTest);
+assert strResult == #Object;
+
+// ----------------------------------------------------------------------------
+// SECTION 12: Table Equality
+// ----------------------------------------------------------------------------
+
+// Test: Empty tables are equal
+assert {} == {};
+
+// Test: Tables with same content are equal
+assert {x: 1} == {x: 1};
+assert {a: 1, b: 2} == {a: 1, b: 2};
+assert {a: 1, b: 2} == {b: 2, a: 1};
+
+// Test: Tables with different content are not equal
+var eq1 = {x: 1} == {x: 2};
+assert eq1 == false;
+var eq2 = {x: 1} == {y: 1};
+assert eq2 == false;
+var eq3 = {a: 1} == {a: 1, b: 2};
+assert eq3 == false;
+
+// Test: Nested table equality
+assert {inner: {val: 42}} == {inner: {val: 42}};
+var nestedNeq = {inner: {val: 42}} == {inner: {val: 99}};
+assert nestedNeq == false;
+
+// Test: Tables with different value types
+assert {x: 1} == {x: 1};
+var typeNeq1 = {x: 1} == {x: "1"};
+assert typeNeq1 == false;
+// Note: 1 == 1.0 is true due to numeric coercion, so {x: 1} == {x: 1.0} is also true
+
+// Test: Table not equal to non-table (primitives)
+var neqNone = {} == none;
+assert neqNone == false;
+var neqNum = {} == 0;
+assert neqNum == false;
+var neqStr = {} == "";
+assert neqStr == false;
+// Note: {} == [] is true because both are empty objects (structural equality)
+
+// Test: List equality (bonus)
+assert [] == [];
+assert [1, 2, 3] == [1, 2, 3];
+var listNeq1 = [1, 2] == [1, 2, 3];
+assert listNeq1 == false;
+var listNeq2 = [1, 2, 3] == [1, 2];
+assert listNeq2 == false;
+var listNeq3 = [1, 2, 3] == [3, 2, 1];
+assert listNeq3 == false;
+
+// ----------------------------------------------------------------------------
+// SECTION 13: Edge Cases
+// ----------------------------------------------------------------------------
+
+// Test: Table property with empty string key (if supported via bracket notation)
+// var emptyKey = {};
+// emptyKey[""] = "empty key value";
+// assert emptyKey[""] == "empty key value";
+
+// Test: Table property access on just-created table
+assert ({x: 100}).x == 100;
+
+// Test: Chained property access on inline table
+assert ({data: {value: 42}}).data.value == 42;
+
+// Test: Table in try-catch
+var tryTable = try { {result: "success"} } catch (e) { {result: "error"} };
+assert tryTable.result == "success";
+
+// Test: Table property set in block
+var blockTest = {};
+{
+    blockTest.inBlock = true;
+}
+assert blockTest.inBlock == true;
+
+#pass

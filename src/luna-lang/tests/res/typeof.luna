@@ -1,0 +1,11 @@
+assert typeof(none) == #None;
+assert typeof(true) == #Boolean;
+assert typeof(false) == #Boolean;
+assert typeof(0) == #Integer;
+assert typeof(0.0) == #Number;
+assert typeof(#foo) == #Symbol;
+assert typeof("") == #String;
+assert typeof({}) == #Object;
+assert typeof([]) == #Object;
+
+#pass

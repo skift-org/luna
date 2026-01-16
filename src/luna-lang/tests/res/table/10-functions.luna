@@ -1,0 +1,21 @@
+// Table in Functions Tests
+
+// Test: Table as function parameter
+var getX = fn(point) { point.x };
+assert getX({x: 42, y: 10}) == 42;
+
+// Test: Function returning table
+var createPoint = fn(x, y) { {x: x, y: y} };
+var point = createPoint(5, 10);
+assert point.x == 5;
+assert point.y == 10;
+
+// Test: Modifying table in function
+var increment = fn(obj) { obj.value = obj.value + 1 };
+var counter = {value: 0};
+increment(counter);
+assert counter.value == 1;
+increment(counter);
+assert counter.value == 2;
+
+#pass

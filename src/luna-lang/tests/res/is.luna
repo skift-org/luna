@@ -1,0 +1,11 @@
+assert none is #None;
+assert true is #Boolean;
+assert false is #Boolean;
+assert 0 is #Integer;
+assert 0.0 is #Number;
+assert #foo is #Symbol;
+assert "" is #String;
+assert {} is #Object;
+assert [] is #Object;
+
+#pass
