@@ -22,6 +22,18 @@ static CompletionOr<Value> _builtinPrint(Reference params) {
     return Ok();
 }
 
+static CompletionOr<Value> _builtinInput(Reference params) {
+    auto prompt = try$(opGet(params, "prompt"_sym));
+    Sys::print("{}", prompt);
+    auto line = Io::readLineUtf8(Sys::in()).take();
+    return Ok(line);
+}
+
+static CompletionOr<Value> _builtinExit(Reference) {
+    Sys::exit(Ok());
+    return Ok();
+}
+
 export CompletionOr<Reference> builtins() {
     Reference env = try$(Environment::create(NONE));
 
@@ -41,7 +53,7 @@ export CompletionOr<Reference> builtins() {
     ));
 
     try$(env->decl(
-        "print"_sym,
+        "println"_sym,
         try$(
             Func::create(
                 env,
@@ -51,6 +63,32 @@ export CompletionOr<Reference> builtins() {
                     },
                 },
                 Native{_builtinPrint}
+            )
+        )
+    ));
+
+    try$(env->decl(
+        "input"_sym,
+        try$(
+            Func::create(
+                env,
+                {
+                    {
+                        "prompt"_sym,
+                    },
+                },
+                Native{_builtinInput}
+            )
+        )
+    ));
+
+    try$(env->decl(
+        "exit"_sym,
+        try$(
+            Func::create(
+                env,
+                {},
+                Native{_builtinExit}
             )
         )
     ));

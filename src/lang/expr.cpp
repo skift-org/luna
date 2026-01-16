@@ -641,12 +641,13 @@ export struct BlockExpr : Base {
     // { <exprs>;... }
 
     Vec<Value> _exprs;
+    bool _scoped = true;
 
-    BlockExpr(Vec<Value> exprs = {})
-        : _exprs(exprs) {}
+    BlockExpr(Vec<Value> exprs = {}, bool scoped = true)
+        : _exprs(exprs), _scoped(scoped) {}
 
     CompletionOr<Value> eval(Reference env) override {
-        auto inner = try$(Environment::create(env));
+        auto inner = _scoped ? try$(Environment::create(env)) : env;
         for (usize i : range(_exprs.len())) {
             auto value = try$(opEval(_exprs[i], inner));
             if (i == _exprs.len() - 1)

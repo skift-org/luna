@@ -898,7 +898,7 @@ static CompletionOr<Value> _parseTopLevel(Cursor<Token>& c) {
         _eatWhitespace(c);
     } while (c.skip(Token::SEMICOLON) or *c != Token::EOF);
 
-    return opNew<BlockExpr>(exprs);
+    return opNew<BlockExpr>(exprs, false);
 }
 
 export CompletionOr<Value> parse(Str code) {

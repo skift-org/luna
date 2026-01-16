@@ -10,9 +10,9 @@ import :builtins;
 
 namespace Luna {
 
-export CompletionOr<Value> evalStr(Str code) {
+export CompletionOr<Value> evalStr(Str code, Reference env) {
     auto expr = try$(Luna::parse(code));
-    auto res = opEval(expr, try$(Luna::builtins()));
+    auto res = opEval(expr, env);
     if (res)
         return res;
 
@@ -20,6 +20,10 @@ export CompletionOr<Value> evalStr(Str code) {
     if (completion.type == Completion::EXCEPTION)
         return completion;
     return Ok(completion.value);
+}
+
+export CompletionOr<Value> evalStr(Str code) {
+    return evalStr(code, try$(builtins()));
 }
 
 } // namespace Luna
