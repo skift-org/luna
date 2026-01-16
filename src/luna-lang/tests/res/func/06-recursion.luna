@@ -1,0 +1,33 @@
+// Function Recursion Tests
+
+// Test: Simple recursion - factorial
+var factorial = fn(n) {
+    if (n <= 1) 1 else n * factorial(n - 1);
+};
+assert factorial(0) == 1;
+assert factorial(1) == 1;
+assert factorial(5) == 120;
+
+// Test: Recursion with accumulator
+var factorialAcc = fn(n, acc: 1) {
+    if (n <= 1) acc else factorialAcc(n - 1, acc * n);
+};
+assert factorialAcc(5) == 120;
+
+// Test: Fibonacci
+var fib = fn(n) {
+    if (n <= 1) n else fib(n - 1) + fib(n - 2);
+};
+assert fib(0) == 0;
+assert fib(1) == 1;
+assert fib(2) == 1;
+assert fib(5) == 5;
+assert fib(10) == 55;
+
+// Test: Countdown
+var countdown = fn(n) {
+    if (n <= 0) 0 else countdown(n - 1);
+};
+assert countdown(100) == 0;
+
+#pass

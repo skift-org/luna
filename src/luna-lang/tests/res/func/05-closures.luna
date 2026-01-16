@@ -1,0 +1,44 @@
+// Function Closure Tests
+
+// Test: Closure captures outer variable
+var x = 10;
+var getX = fn() { x };
+assert getX() == 10;
+
+// Test: Closure captures and uses outer variable
+var multiplier = 3;
+var multiply = fn(x) { x * multiplier };
+assert multiply(4) == 12;
+
+// Test: Nested closures
+var outer = 1;
+var level1 = fn() {
+    var inner = 2;
+    fn() { outer + inner };
+};
+var level2 = level1();
+assert level2() == 3;
+
+// Test: Closure factory
+var counter = fn() {
+    var count = 0;
+    {
+        inc: fn() { count = count + 1; count },
+        get: fn() { count }
+    };
+};
+var c1 = counter();
+assert c1.get() == 0;
+assert c1.inc() == 1;
+assert c1.inc() == 2;
+assert c1.get() == 2;
+
+// Test: Multiple closures over same variable
+var shared = 0;
+var inc = fn() { shared = shared + 1 };
+var get = fn() { shared };
+inc();
+inc();
+assert get() == 2;
+
+#pass

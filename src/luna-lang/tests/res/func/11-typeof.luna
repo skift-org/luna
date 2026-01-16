@@ -1,0 +1,20 @@
+// Function typeof Tests
+
+// Test: Function typeof
+var f = fn() { 42 };
+assert typeof(f) == #Object;
+
+// Test: Multiple-arg function typeof
+var add = fn(a, b) { a + b };
+assert typeof(add) == #Object;
+
+// Test: Anonymous function typeof
+assert typeof(fn() { 1 }) == #Object;
+assert typeof(fn(x) { x }) == #Object;
+
+// Test: Returned function typeof
+var maker = fn() { fn(x) { x } };
+var inner = maker();
+assert typeof(inner) == #Object;
+
+#pass

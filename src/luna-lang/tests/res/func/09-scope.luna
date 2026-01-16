@@ -1,0 +1,46 @@
+// Function Scope Tests
+
+// Test: Parameter shadows outer variable
+var x = 100;
+var f = fn(x) { x };
+assert f(5) == 5;
+assert x == 100;
+
+// Test: Local variable shadows outer
+var y = 50;
+var g = fn() {
+    var y = 10;
+    y;
+};
+assert g() == 10;
+assert y == 50;
+
+// Test: Function can modify outer variable
+var counter = 0;
+var inc = fn() { counter = counter + 1 };
+inc();
+inc();
+inc();
+assert counter == 3;
+
+// Test: Nested function scope
+var outer = fn() {
+    var a = 1;
+    var inner = fn() {
+        var b = 2;
+        a + b;
+    };
+    inner();
+};
+assert outer() == 3;
+
+// Test: Each call gets fresh locals
+var makeCounter = fn() {
+    var c = 0;
+    c = c + 1;
+    c;
+};
+assert makeCounter() == 1;
+assert makeCounter() == 1;
+
+#pass

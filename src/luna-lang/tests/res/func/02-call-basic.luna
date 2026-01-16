@@ -1,0 +1,33 @@
+// Function Call Basic Tests
+
+// Test: Call function with no arguments
+var getFortyTwo = fn() { 42 };
+assert getFortyTwo() == 42;
+
+// Test: Call function with one argument
+var identity = fn(x) { x };
+assert identity(5) == 5;
+assert identity("hello") == "hello";
+assert identity(none) == none;
+
+// Test: Call function with multiple arguments
+var add = fn(a, b) { a + b };
+assert add(2, 3) == 5;
+assert add(10, 20) == 30;
+
+// Test: Call function with three arguments
+var sum3 = fn(a, b, c) { a + b + c };
+assert sum3(1, 2, 3) == 6;
+
+// Test: Function returning different types
+var returnInt = fn() { 42 };
+var returnStr = fn() { "hello" };
+var returnBool = fn() { true };
+var returnNone = fn() { none };
+
+assert returnInt() == 42;
+assert returnStr() == "hello";
+assert returnBool() == true;
+assert returnNone() == none;
+
+#pass

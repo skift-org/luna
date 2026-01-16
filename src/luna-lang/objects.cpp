@@ -239,12 +239,12 @@ export struct Func : Base {
         Integer index = 0;
         for (auto& s : _sig) {
             if (try$(opHas(params, s.key))) {
-                try$(opSet(locals, s.key, try$(opGet(params, s.key))));
+                try$(opDecl(locals, s.key, try$(opGet(params, s.key))));
             } else if (try$(opHas(params, index))) {
-                try$(opSet(locals, s.key, try$(opGet(params, index))));
+                try$(opDecl(locals, s.key, try$(opGet(params, index))));
                 index++;
             } else if (not s.required) {
-                try$(opSet(locals, s.key, s.value));
+                try$(opDecl(locals, s.key, s.value));
             } else {
                 return Completion::exception("missing parameter");
             }

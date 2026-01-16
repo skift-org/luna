@@ -1,0 +1,36 @@
+// Function Edge Cases Tests
+
+// Test: Immediately invoked function
+assert (fn() { 42 })() == 42;
+assert (fn(x) { x * 2 })(5) == 10;
+
+// Test: Function returning function called immediately
+assert (fn() { fn() { 99 } })()() == 99;
+
+// Test: Deeply nested function calls
+var a = fn(x) { x + 1 };
+var b = fn(x) { a(x) + 1 };
+var c = fn(x) { b(x) + 1 };
+assert c(0) == 3;
+
+// Test: Function with many parameters
+var many = fn(a, b, c, d, e) { a + b + c + d + e };
+assert many(1, 2, 3, 4, 5) == 15;
+
+// Test: Function in try-catch
+var mayFail = fn(x) {
+    if (x < 0) throw "negative";
+    x;
+};
+assert (try mayFail(5) catch (e) 0) == 5;
+assert (try mayFail(-1) catch (e) 0) == 0;
+
+// Test: Function in conditional
+var f = if (true) fn(x) { x + 1 } else fn(x) { x - 1 };
+assert f(10) == 11;
+
+// Test: Chained function calls
+var makeAdder = fn(n) { fn(x) { x + n } };
+assert makeAdder(1)(makeAdder(2)(makeAdder(3)(0))) == 6;
+
+#pass

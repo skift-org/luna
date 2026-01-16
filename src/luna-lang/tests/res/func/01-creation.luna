@@ -1,0 +1,26 @@
+// Function Creation Tests
+
+// Test: Empty function (no params, no body)
+var empty = fn() { none };
+assert typeof(empty) == #Object;
+
+// Test: Function with single parameter
+var identity = fn(x) { x };
+assert typeof(identity) == #Object;
+
+// Test: Function with multiple parameters
+var add = fn(a, b) { a + b };
+assert typeof(add) == #Object;
+
+// Test: Function with expression body (no block)
+var double = fn(x) x * 2;
+assert typeof(double) == #Object;
+
+// Test: Function with block body
+var complex = fn(x) {
+    var y = x * 2;
+    y + 1;
+};
+assert typeof(complex) == #Object;
+
+#pass

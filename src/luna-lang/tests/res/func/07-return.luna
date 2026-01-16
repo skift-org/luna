@@ -1,0 +1,38 @@
+// Function Return Statement Tests
+
+// Test: Explicit return
+var earlyReturn = fn(x) {
+    if (x < 0) return "negative";
+    if (x == 0) return "zero";
+    return "positive";
+};
+assert earlyReturn(-5) == "negative";
+assert earlyReturn(0) == "zero";
+assert earlyReturn(5) == "positive";
+
+// Test: Return from nested block
+var nestedReturn = fn(x) {
+    {
+        if (x > 10) return "big";
+    };
+    "small";
+};
+assert nestedReturn(20) == "big";
+assert nestedReturn(5) == "small";
+
+// Test: Return none explicitly
+var returnNone = fn() {
+    return none;
+    "unreachable";
+};
+assert returnNone() == none;
+
+// Test: Return complex value
+var returnTable = fn() {
+    return {x: 1, y: 2};
+};
+var t = returnTable();
+assert t.x == 1;
+assert t.y == 2;
+
+#pass

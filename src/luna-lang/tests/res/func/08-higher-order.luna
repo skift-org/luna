@@ -1,0 +1,33 @@
+// Function Higher-Order Tests
+
+// Test: Map-like function
+var transform = fn(val, f) { f(val) };
+assert transform(5, fn(x) { x * 2 }) == 10;
+assert transform("hi", fn(s) { s }) == "hi";
+
+// Test: Compose functions
+var compose = fn(f, g) {
+    fn(x) { f(g(x)) };
+};
+var addOne = fn(x) { x + 1 };
+var double = fn(x) { x * 2 };
+var addOneThenDouble = compose(double, addOne);
+assert addOneThenDouble(5) == 12;
+
+// Test: Apply function multiple times
+var applyTwice = fn(f, x) { f(f(x)) };
+assert applyTwice(fn(x) { x + 1 }, 0) == 2;
+assert applyTwice(fn(x) { x * 2 }, 3) == 12;
+
+// Test: Function that returns different functions
+var makeOp = fn(op) {
+    if (op == #add) fn(a, b) { a + b }
+    else if (op == #sub) fn(a, b) { a - b }
+    else if (op == #mul) fn(a, b) { a * b }
+    else fn(a, b) { 0 };
+};
+assert makeOp(#add)(2, 3) == 5;
+assert makeOp(#sub)(5, 3) == 2;
+assert makeOp(#mul)(4, 5) == 20;
+
+#pass

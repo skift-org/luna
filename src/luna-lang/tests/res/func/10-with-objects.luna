@@ -1,0 +1,42 @@
+// Function with Objects Tests
+
+// Test: Function modifies table
+var setX = fn(obj, val) { obj.x = val };
+var t = {x: 0};
+setX(t, 42);
+assert t.x == 42;
+
+// Test: Method-like pattern
+var point = {
+    x: 0,
+    y: 0,
+    setX: fn(self, val) { self.x = val },
+    setY: fn(self, val) { self.y = val },
+    sum: fn(self) { self.x + self.y }
+};
+point.setX(point, 10);
+point.setY(point, 20);
+assert point.sum(point) == 30;
+
+// Test: Factory function
+var createPoint = fn(x, y) {
+    {
+        x: x,
+        y: y,
+        distance: fn(self) { self.x + self.y }
+    };
+};
+var p = createPoint(3, 4);
+assert p.x == 3;
+assert p.y == 4;
+assert p.distance(p) == 7;
+
+// Test: Function returning modified table
+var withDefault = fn(obj, key, val) {
+    obj[key] = val;
+    obj;
+};
+var config = withDefault({}, #name, "test");
+assert config.name == "test";
+
+#pass
