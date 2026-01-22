@@ -27,9 +27,10 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         auto url = Ref::parseUrlOrPath(scriptArg.value());
         auto code = co_try$(Sys::readAllUtf8(url));
 
-        auto parseRes = Luna::parse(code);
+        Luna::DiagCollector diag{code};
+        auto parseRes = Luna::parse(code, diag);
         if (not parseRes) {
-            logError("failed to parse {}: {}", scriptArg.value(), parseRes.none().value);
+            diag.dumpTo(Sys::err());
             co_return Error::invalidInput("parser error");
         }
 
@@ -51,11 +52,23 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
     while (true) {
         Sys::print(">>> ");
         auto line = co_try$(Io::readLineUtf8(Sys::in()));
-        auto res = Luna::evalStr(line, env);
-        if (not res) {
-            Sys::println("runtime error {}: {}", scriptArg.value(), res.none().value);
+        Luna::DiagCollector diag{line};
+        auto parseRes = Luna::parse(line, diag);
+        if (not parseRes) {
+            diag.dumpTo(Sys::err());
+            continue;
+        }
+
+        auto evalRes = Luna::opEval(parseRes.take(), env);
+        if (not evalRes) {
+            auto completion = evalRes.none();
+            if (completion.type == Luna::Completion::EXCEPTION) {
+                Sys::errln("runtime error: {}", completion.value);
+            } else {
+                Sys::println("{}", completion.value);
+            }
         } else {
-            Sys::println("{}", res.take());
+            Sys::println("{}", evalRes.take());
         }
     }
 

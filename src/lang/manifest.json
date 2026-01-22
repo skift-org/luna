@@ -4,6 +4,7 @@
     "type": "lib",
     "requires": [
         "karm-core",
+        "karm-diag",
         "karm-sys"
     ]
 }
