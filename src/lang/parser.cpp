@@ -271,14 +271,14 @@ export struct DiagCollector {
         Io::StringWriter w;
         Diag::Renderer renderer{source};
         for (auto const& d : diags)
-            (void)w.writeStr(renderer.renderToString(d).str());
+            renderer.render(w, d);
         return w.take();
     }
 
     void dumpTo(Io::TextWriter& w) const {
         Diag::Renderer renderer{source};
         for (auto const& d : diags)
-            (void)w.writeStr(renderer.renderToString(d).str());
+            renderer.render(w, d);
     }
 };
 
@@ -342,7 +342,7 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
             Io::Loc endLoc = s.loc();
             Token::Kind kind = KEYWORDS.tryGet(text).unwrapOr(Token::IDENT);
 
-            tokens.emplaceBack(kind, text, Io::LocSpan{startLoc, endLoc, text});
+            tokens.emplaceBack(kind, text, Io::LocSpan{startLoc, endLoc});
             continue;
         }
 
@@ -353,17 +353,17 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
                 s.next(); // consume dot
                 s.eat(Re::digit());
                 Io::Loc endLoc = s.loc();
-                tokens.emplaceBack(Token::NUMBER, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+                tokens.emplaceBack(Token::NUMBER, s.end(), Io::LocSpan{startLoc, endLoc});
             } else {
                 Io::Loc endLoc = s.loc();
-                tokens.emplaceBack(Token::INTEGER, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+                tokens.emplaceBack(Token::INTEGER, s.end(), Io::LocSpan{startLoc, endLoc});
             }
             continue;
         }
 
         if (s.skip('"')) {
             Io::Loc endLoc = s.loc();
-            tokens.emplaceBack(Token::LSTR, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+            tokens.emplaceBack(Token::LSTR, s.end(), Io::LocSpan{startLoc, endLoc});
 
             s.begin();
             Io::Loc spanStart = s.loc();
@@ -373,16 +373,15 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
                 s.next();
             }
             Io::Loc spanEnd = s.loc();
-            tokens.emplaceBack(Token::SPAN, s.end(), Io::LocSpan{spanStart, spanEnd, s.end()});
+            tokens.emplaceBack(Token::SPAN, s.end(), Io::LocSpan{spanStart, spanEnd});
 
             s.begin();
             Io::Loc closeStart = s.loc();
             if (s.skip('"')) {
                 Io::Loc closeEnd = s.loc();
-                tokens.emplaceBack(Token::RSTR, s.end(), Io::LocSpan{closeStart, closeEnd, s.end()});
+                tokens.emplaceBack(Token::RSTR, s.end(), Io::LocSpan{closeStart, closeEnd});
             } else {
-                Str unterminatedText = sub(diag.source, startLoc.offset, spanEnd.offset);
-                return diag.fatal(Diag::Diagnostic::error("E0001", "unterminated string literal").withPrimaryLabel(Io::LocSpan{startLoc, spanEnd, unterminatedText}, "string started here").withHelp("add a closing '\"' to terminate the string"));
+                return diag.fatal(Diag::Diagnostic::error("E0001", "unterminated string literal").withPrimaryLabel(Io::LocSpan{startLoc, spanEnd}, "string started here").withHelp("add a closing '\"' to terminate the string"));
             }
             continue;
         }
@@ -390,22 +389,22 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
         // Two-character operators
         if (s.skip("==")) {
             Io::Loc endLoc = s.loc();
-            tokens.emplaceBack(Token::EQ, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+            tokens.emplaceBack(Token::EQ, s.end(), Io::LocSpan{startLoc, endLoc});
             continue;
         }
         if (s.skip("!=")) {
             Io::Loc endLoc = s.loc();
-            tokens.emplaceBack(Token::NEQ, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+            tokens.emplaceBack(Token::NEQ, s.end(), Io::LocSpan{startLoc, endLoc});
             continue;
         }
         if (s.skip("<=")) {
             Io::Loc endLoc = s.loc();
-            tokens.emplaceBack(Token::LTEQ, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+            tokens.emplaceBack(Token::LTEQ, s.end(), Io::LocSpan{startLoc, endLoc});
             continue;
         }
         if (s.skip(">=")) {
             Io::Loc endLoc = s.loc();
-            tokens.emplaceBack(Token::GTEQ, s.end(), Io::LocSpan{startLoc, endLoc, s.end()});
+            tokens.emplaceBack(Token::GTEQ, s.end(), Io::LocSpan{startLoc, endLoc});
             continue;
         }
 
@@ -413,7 +412,7 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
 #define SINGLE_CHAR_TOKEN(ch, kind)                                                       \
     if (s.skip(ch)) {                                                                     \
         Io::Loc endLoc = s.loc();                                                         \
-        tokens.emplaceBack(Token::kind, s.end(), Io::LocSpan{startLoc, endLoc, s.end()}); \
+        tokens.emplaceBack(Token::kind, s.end(), Io::LocSpan{startLoc, endLoc}); \
         continue;                                                                         \
     }
 
@@ -446,16 +445,15 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
         // Invalid character
         s.next();
         Io::Loc endLoc = s.loc();
-        Str invalidChar = s.end();
         return diag.fatal(
             Diag::Diagnostic::error("E0002", "unexpected character")
-                .withPrimaryLabel(Io::LocSpan{startLoc, endLoc, invalidChar}, "unexpected character")
+                .withPrimaryLabel(Io::LocSpan{startLoc, endLoc}, "unexpected character")
         );
     }
 
     Io::Loc eofLoc = s.loc();
     s.begin();
-    tokens.emplaceBack(Token::EOF, s.end(), Io::LocSpan{eofLoc, eofLoc, ""s});
+    tokens.emplaceBack(Token::EOF, s.end(), Io::LocSpan{eofLoc, eofLoc});
 
     return Ok(tokens);
 }
@@ -980,7 +978,7 @@ static CompletionOr<Value> _parseExpr(Cursor<Token>& c, DiagCollector& diag, Pre
     // The end is now the start of the current token (which is after the prefix)
     if (not c.ended()) {
         lhsSpan.end = c->span.start;
-        lhsSpan.text = ""s; // Clear text since span now covers multiple tokens
+        // lhsSpan.text = ""s; // Clear text since span now covers multiple tokens
     }
     while (not c.ended()) {
         Prec nextPrec = _peekPrec(c);
