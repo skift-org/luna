@@ -1,4 +1,4 @@
-#include <karm-test/macros.h>
+#include <karm/test>
 
 import Luna;
 import Karm.Test;
