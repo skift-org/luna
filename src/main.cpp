@@ -49,9 +49,15 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
     }
 
     auto env = Luna::builtins().take();
+    Sys::println("Luna");
+    Sys::println("Type 'exit' to quit");
+
     while (true) {
-        Sys::print(">>> ");
+        Sys::print("] ");
         auto line = co_try$(Io::readLineUtf8(Sys::in()));
+        if (line == "exit")
+            break;
+
         Luna::DiagCollector diag{line};
         auto parseRes = Luna::parse(line, diag);
         if (not parseRes) {
