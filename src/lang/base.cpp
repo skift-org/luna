@@ -22,9 +22,8 @@ export using Integer = i64;
 
 export using Number = f64;
 
-export struct Value : Union<None, Boolean, Integer, Number, Symbol, String, Reference> {
-    using Union::Union;
-};
+export using Value = Union<
+    None, Boolean, Integer, Number, Symbol, String, Reference>;
 
 namespace Symbols {
 
@@ -137,6 +136,10 @@ struct Base {
 
     virtual CompletionOr<Integer> len() const {
         return Completion::exception("can't len");
+    }
+
+    virtual u64 hash() const {
+        return Karm::hash(reinterpret_cast<usize>(this));
     }
 
     bool operator==(Value other) const {

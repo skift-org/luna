@@ -20,9 +20,8 @@ export struct Table : Base {
     }
 
     CompletionOr<Value> get(Value key) override {
-        if (not _fields.has(key))
-            return Completion::exception("key not found");
-        return Ok(_fields.get(key));
+        return _fields.lookup(key)
+            .okOr(Completion::exception("key not found"));
     }
 
     CompletionOr<> set(Value key, Value value) override {
@@ -35,7 +34,7 @@ export struct Table : Base {
     }
 
     CompletionOr<Boolean> has(Value key) override {
-        return Ok(_fields.has(key));
+        return Ok(_fields.contains(key));
     }
 
     CompletionOr<Boolean> eq(Value rhs) const override {
@@ -46,7 +45,7 @@ export struct Table : Base {
         if (not try$(opEq(try$(len()), try$(opLen(rhs)))))
             return Ok(false);
 
-        for (auto& [k, v] : _fields.iterUnordered()) {
+        for (auto const& [k, v] : _fields.iterItems()) {
             if (not try$(opHas(rhs, k)))
                 return Ok(false);
 
@@ -60,7 +59,7 @@ export struct Table : Base {
         StringBuilder sb;
         sb.append("{"s);
         bool first = true;
-        for (auto& [k, v] : _fields.iterUnordered()) {
+        for (auto const& [k, v] : _fields.iterItems()) {
             if (not first)
                 sb.append(", "s);
             first = false;
@@ -79,6 +78,10 @@ export struct Table : Base {
 
     CompletionOr<Integer> len() const override {
         return Ok(_fields.len());
+    }
+
+    u64 hash() const override {
+        return Karm::hash(_fields);
     }
 };
 
@@ -159,6 +162,10 @@ export struct List : Base {
 
     CompletionOr<Integer> len() const override {
         return Ok(_items.len());
+    }
+
+    u64 hash() const override {
+        return Karm::hash(_items);
     }
 };
 

@@ -24,7 +24,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         co_return Ok();
 
     if (scriptArg.value()) {
-        auto url = Ref::parseUrlOrPath(scriptArg.value());
+        auto url = Ref::parseUrlOrPath(scriptArg.value(), co_try$(Sys::pwd()));
         auto code = co_try$(Sys::readAllUtf8(url));
 
         Luna::DiagCollector diag{code};

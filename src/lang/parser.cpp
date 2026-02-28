@@ -340,7 +340,7 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
 
             Str text = s.end();
             Io::Loc endLoc = s.loc();
-            Token::Kind kind = KEYWORDS.tryGet(text).unwrapOr(Token::IDENT);
+            Token::Kind kind = KEYWORDS.lookup(text).unwrapOr(Token::IDENT);
 
             tokens.emplaceBack(kind, text, Io::LocSpan{startLoc, endLoc});
             continue;
@@ -409,11 +409,11 @@ export CompletionOr<Vec<Token>> lex(Io::SScan& s, DiagCollector& diag) {
         }
 
 // Single-character tokens
-#define SINGLE_CHAR_TOKEN(ch, kind)                                                       \
-    if (s.skip(ch)) {                                                                     \
-        Io::Loc endLoc = s.loc();                                                         \
+#define SINGLE_CHAR_TOKEN(ch, kind)                                              \
+    if (s.skip(ch)) {                                                            \
+        Io::Loc endLoc = s.loc();                                                \
         tokens.emplaceBack(Token::kind, s.end(), Io::LocSpan{startLoc, endLoc}); \
-        continue;                                                                         \
+        continue;                                                                \
     }
 
         SINGLE_CHAR_TOKEN('(', LPAREN)

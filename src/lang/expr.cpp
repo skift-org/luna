@@ -648,7 +648,7 @@ export struct BlockExpr : Base {
 
     CompletionOr<Value> eval(Reference env) override {
         auto inner = _scoped ? try$(Environment::create(env)) : env;
-        for (usize i : range(_exprs.len())) {
+        for (usize i : urange::zeroTo(_exprs.len())) {
             auto value = try$(opEval(_exprs[i], inner));
             if (i == _exprs.len() - 1)
                 return Ok(value);
@@ -659,7 +659,7 @@ export struct BlockExpr : Base {
     CompletionOr<Value> string() override {
         StringBuilder sb;
         sb.append("{"s);
-        for (usize i : range(_exprs.len())) {
+        for (usize i : urange::zeroTo(_exprs.len())) {
             sb.append(Io::format("{}", _exprs[i]));
             if (i != _exprs.len() - 1)
                 sb.append("; "s);
