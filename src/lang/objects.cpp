@@ -80,8 +80,8 @@ export struct Table : Base {
         return Ok(_fields.len());
     }
 
-    u64 hash() const override {
-        return Karm::hash(_fields);
+    void hash(Hasher& h) const override {
+        Karm::hash(h, _fields);
     }
 };
 
@@ -164,8 +164,8 @@ export struct List : Base {
         return Ok(_items.len());
     }
 
-    u64 hash() const override {
-        return Karm::hash(_items);
+    void hash(Hasher& h) const override {
+        Karm::hash(h, _items);
     }
 };
 

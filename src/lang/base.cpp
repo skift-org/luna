@@ -138,8 +138,8 @@ struct Base {
         return Completion::exception("can't len");
     }
 
-    virtual u64 hash() const {
-        return Karm::hash(reinterpret_cast<usize>(this));
+    virtual void hash(Hasher& h) const {
+        Karm::hash(h, reinterpret_cast<usize>(this));
     }
 
     bool operator==(Value other) const {
