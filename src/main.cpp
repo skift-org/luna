@@ -8,7 +8,7 @@ import Karm.Logger;
 
 using namespace Karm;
 
-Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
+Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
     auto scriptArg = Cli::operand<Str>("script"s, "Script to run"s);
 
     Cli::Command cmd{
@@ -19,12 +19,12 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         }
     };
 
-    co_trya$(cmd.execAsync(ctx));
+    co_trya$(cmd.execAsync(env));
     if (not cmd)
         co_return Ok();
 
     if (scriptArg.value()) {
-        auto url = Ref::parseUrlOrPath(scriptArg.value(), co_try$(Sys::pwd()));
+        auto url = Ref::parseUrlOrPath(scriptArg.value(), env.cwd());
         auto code = co_try$(Sys::readAllUtf8(url));
 
         Luna::DiagCollector diag{code};
@@ -48,7 +48,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
         co_return Ok();
     }
 
-    auto env = Luna::builtins().take();
+    auto vm = Luna::builtins().take();
     Sys::println("Luna");
     Sys::println("Type 'exit' to quit");
 
@@ -65,7 +65,7 @@ Async::Task<> entryPointAsync(Sys::Context& ctx, Async::CancellationToken) {
             continue;
         }
 
-        auto evalRes = Luna::opEval(parseRes.take(), env);
+        auto evalRes = Luna::opEval(parseRes.take(), vm);
         if (not evalRes) {
             auto completion = evalRes.none();
             if (completion.type == Luna::Completion::EXCEPTION) {
