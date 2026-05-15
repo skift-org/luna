@@ -7,6 +7,7 @@ export module Luna:base;
 import Karm.Core;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 namespace Luna {
 

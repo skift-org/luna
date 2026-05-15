@@ -5,6 +5,7 @@ import Karm.Test;
 import Karm.Logger;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 namespace Luna::Tests {
 

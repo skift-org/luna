@@ -8,6 +8,8 @@ import Karm.Diag;
 import Karm.Logger;
 import :expr;
 
+using namespace Karm::Re::Literals;
+
 namespace Luna {
 
 // MARK: Lexer -----------------------------------------------------------------

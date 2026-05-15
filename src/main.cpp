@@ -7,6 +7,7 @@ import Karm.Ref;
 import Karm.Logger;
 
 using namespace Karm;
+using namespace Karm::Literals;
 
 Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
     auto scriptArg = Cli::operand<Str>("script"s, "Script to run"s);
