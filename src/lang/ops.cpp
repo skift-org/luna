@@ -12,7 +12,7 @@ namespace Luna {
 // MARK: TypeOf ----------------------------------------------------------------
 
 Symbol typeOf(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) {
             return Symbols::NONE;
         },
@@ -33,8 +33,8 @@ Symbol typeOf(Value v) {
         },
         [](Reference) {
             return Symbols::OBJECT;
-        },
-    });
+        }
+    );
 }
 
 // MARK: Is --------------------------------------------------------------------
@@ -96,18 +96,18 @@ Boolean is(Value v, Symbol type) {
 // MARK: As --------------------------------------------------------------------
 
 CompletionOr<None> asNone(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<None> {
             return Ok(NONE);
         },
         [](auto) -> CompletionOr<None> {
             return Completion::exception("could not convert to none");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Boolean> asBoolean(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<Boolean> {
             return Ok(false);
         },
@@ -128,12 +128,12 @@ CompletionOr<Boolean> asBoolean(Value v) {
         },
         [](Reference o) -> CompletionOr<Boolean> {
             return o->boolean();
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Integer> asInteger(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<Integer> {
             return Ok(0);
         },
@@ -148,8 +148,8 @@ CompletionOr<Integer> asInteger(Value v) {
         },
         [](auto) -> CompletionOr<Integer> {
             return Completion::exception("could not convert to integer");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Integer> asIndex(Value v) {
@@ -159,7 +159,7 @@ CompletionOr<Integer> asIndex(Value v) {
 }
 
 CompletionOr<Number> asNumber(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<Number> {
             return Ok(0.0);
         },
@@ -174,12 +174,12 @@ CompletionOr<Number> asNumber(Value v) {
         },
         [](auto) -> CompletionOr<Number> {
             return Completion::exception("could not convert to number");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<String> asString(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<String> {
             return Ok<String>({"none"s});
         },
@@ -203,30 +203,30 @@ CompletionOr<String> asString(Value v) {
             if (not isString(res))
                 return Completion::exception("expected string");
             return Ok(res.take<String>());
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Symbol> asSymbol(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](Symbol s) -> CompletionOr<Symbol> {
             return Ok(s);
         },
         [](auto) -> CompletionOr<Symbol> {
             return Completion::exception("could not convert to symbol");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Reference> asObject(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](Reference o) -> CompletionOr<Reference> {
             return Ok(o);
         },
         [](auto) -> CompletionOr<Reference> {
             return Completion::exception("could not convert to object");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Value> as(Value v, Symbol type) {
@@ -398,7 +398,7 @@ CompletionOr<Value> opCall(Value val, Reference params) {
 }
 
 CompletionOr<Value> opNeg(Value v) {
-    return v.visit(Visitor{
+    return v.visit(
         [](None) -> CompletionOr<Value> {
             return Ok(Integer{0});
         },
@@ -413,8 +413,8 @@ CompletionOr<Value> opNeg(Value v) {
         },
         [](auto&) -> CompletionOr<Value> {
             return Completion::exception("scalar operation on non scalar");
-        },
-    });
+        }
+    );
 }
 
 CompletionOr<Value> opAdd(Value lhs, Value rhs) {
@@ -548,7 +548,7 @@ CompletionOr<Reference> opNew(Args&&... args) {
 }
 
 export CompletionOr<Value> opEval(Value v, Reference env) {
-    return v.visit(Visitor{
+    return v.visit(
         [&](auto) -> CompletionOr<Value> {
             return Ok(v);
         },
@@ -557,8 +557,8 @@ export CompletionOr<Value> opEval(Value v, Reference env) {
         },
         [&](Reference o) -> CompletionOr<Value> {
             return o->eval(env);
-        },
-    });
+        }
+    );
 }
 
 } // namespace Luna

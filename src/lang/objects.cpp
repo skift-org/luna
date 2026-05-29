@@ -257,14 +257,14 @@ export struct Func : Base {
             }
         }
 
-        return _code.visit(Visitor{
+        return _code.visit(
             [&](Value expr) {
                 return opEval(expr, locals);
             },
             [&](Native& native) {
                 return native(locals);
-            },
-        });
+            }
+        );
     }
 };
 
