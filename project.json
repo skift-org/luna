@@ -1,9 +1,9 @@
 {
-    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.project.v1",
+    "$schema": "https://schemas.cute.engineering/stable/cutekit.manifest.project.v2",
     "id": "skift/luna",
     "type": "project",
     "version": "0.0.1",
-    "extern": {
+    "externs": {
         "skift/karm": {
             "git": "https://codeberg.org/skift/karm.git",
             "tag": "main"
