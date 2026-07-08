@@ -26,7 +26,7 @@ Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
 
     if (scriptArg.value()) {
         auto url = Ref::parseUrlOrPath(scriptArg.value(), env.cwd());
-        auto code = co_try$(Sys::readAllUtf8(url));
+        auto code = co_try$(Sys::readAllText<Utf8>(url));
 
         Luna::DiagCollector diag{code};
         auto parseRes = Luna::parse(code, diag);
@@ -55,7 +55,7 @@ Async::Task<> entryPointAsync(Sys::Env& env, Async::CancellationToken) {
 
     while (true) {
         Sys::print("] ");
-        auto line = co_try$(Io::readLineUtf8(Sys::in()));
+        auto line = co_try$(Io::readLine<Utf8>(Sys::in()));
         if (line == "exit")
             break;
 

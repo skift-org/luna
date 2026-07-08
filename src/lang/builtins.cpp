@@ -25,7 +25,7 @@ static CompletionOr<Value> _builtinPrint(Reference params) {
 static CompletionOr<Value> _builtinInput(Reference params) {
     auto prompt = try$(opGet(params, "prompt"_sym));
     Sys::print("{}", prompt);
-    auto line = Io::readLineUtf8(Sys::in()).take();
+    auto line = Io::readLine<Utf8>(Sys::in()).take();
     return Ok(line);
 }
 

@@ -18,7 +18,7 @@ test$("luna eval") {
         auto subDir = try$(Sys::Dir::open(testsDir.url() / i.name));
         for (auto& j : subDir.entries()) {
             auto url = subDir.url() / j.name;
-            auto code = try$(Sys::readAllUtf8(url));
+            auto code = try$(Sys::readAllText<Utf8>(url));
             auto result = Luna::evalStr(code);
             if (not result) {
                 logError("{} failed: {}", url, result.none().value);
