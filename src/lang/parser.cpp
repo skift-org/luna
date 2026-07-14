@@ -101,7 +101,7 @@ export struct Token {
     Io::LocSpan span;
 
     void repr(Io::Emit& e) const {
-        e("({} {#} at {})", kind, text, span);
+        e("({} {:#} at {})", kind, text, span);
     }
 
     bool operator==(Kind other) const {
