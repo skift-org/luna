@@ -634,7 +634,7 @@ static CompletionOr<Value> _parseFunc(Cursor<Token>& c, DiagCollector& diag) {
 
             Opt<Value> value;
             if (c.skip(Token::COLON)) {
-                value = try$(_parseExpr(c, diag, Prec::LOWEST));
+                value = Some(try$(_parseExpr(c, diag, Prec::LOWEST)));
             }
 
             sig.pushBack({key, value});
@@ -888,7 +888,7 @@ static CompletionOr<Value> _parseCall(Cursor<Token>& c, DiagCollector& diag, Val
                 next.next();
 
                 if (next.skip(Token::COLON)) {
-                    key = try$(_parseIdent(c, diag));
+                    key = Some(try$(_parseIdent(c, diag)));
                     c.next(); // skip colon
                 }
             }
